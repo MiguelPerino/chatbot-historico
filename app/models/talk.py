@@ -5,17 +5,17 @@ def create_talk(db, title="Nova conversa"):
     result = db.conversas.insert_one({
         'title': title,
         'created_on': datetime.now(timezone.utc),
-        'messages': []
+        'message': []
     })
     return str(result.inserted_id)
 
-def serch_talk(db, talk_id):
+def search_talk(db, talk_id):
     return db.conversas.find_one({"_id": ObjectId(talk_id)})
     
 
-def update_talk(db, talk_id, role, content):
-    db.conversas.upadte_one(
+def add_message(db, talk_id, role, content):
+    db.conversas.update_one(
         {"_id": ObjectId(talk_id)},
-        {"$push": {"messages": {"role": role, "content": content}}}
+        {"$push": {'message': {"role": role, "content": content}}}
     )
     
