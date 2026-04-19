@@ -26,11 +26,11 @@ def receive_message(id):
     chat = search_talk(db, id)
     history = chat['message']
 
-    # gemini_history = [{'role': m['role'], 'parts': m['content']} for m in history]    // nao aceita esse tipo de entrada
+    # gemini_history = [{'role': m['role'], 'parts': m['content']} for m in history]    // nao aceita esse 'tipo de entrada
     # gemini_history.append({'role': 'user', 'parts': [message]})
 
     #ele aceita assim, como uma string normal
-    prompt = ""
+    prompt ="Você é um assistente descontraído, amigável e usa linguagem informal.\n\n"
 
     for m in history:
         role = "Usuário" if m['role'] == 'user' else "Assistente"
