@@ -57,6 +57,13 @@ def return_history(id):
 
 @chat_bp.route('/chats', methods=['GET'])
 def chats():
-    pass
+    db = current_app.db 
 
+    # Primeiro {}, filtro vazio, ou seja, traz todos os documentos
+    # Segundo {'title': 1}, projeção, diz quais campos retornar. Aqui traz só o title e o _id
+    conversations = list(db.conversations.find({}, {'title': 1}))
+    for c in conversations:
+        c['_id'] = str(c['_id'])
+    #transforma tudo em str o ObjectId
 
+    return jsonify(conversations)
