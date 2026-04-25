@@ -72,3 +72,16 @@ body {
     border-radius: 10px;
     cursor: pointer;
 }
+
+
+.chat-item {
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 14px;
+}
+
+.chat-item:hover {
+    background-color: #3a3a3a;
+}

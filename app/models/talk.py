@@ -18,4 +18,9 @@ def add_message(db, talk_id, role, content):
         {"_id": ObjectId(talk_id)},
         {"$push": {'message': {"role": role, "content": content}}}
     )
-    
+
+def new_title(db, talk_id, title):
+    db.conversas.update_one(
+        {'_id': ObjectId(talk_id)},
+        {'$set': {'title': title}}
+    )

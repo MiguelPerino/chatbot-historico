@@ -1,5 +1,5 @@
 from flask import render_template, request, jsonify, Blueprint, current_app
-from app.models.talk import create_talk, search_talk, add_message
+from app.models.talk import create_talk, search_talk, add_message, new_title
 from app.services.llm import call_llm
 
 chat_bp = Blueprint('chat', __name__)
@@ -26,6 +26,12 @@ def receive_message(id):
     chat = search_talk(db, id)
     history = chat['message']
 
+    if len(history) == 0:
+        prompt = f'Gere um título curto de no máximo 5 palavras para uma conversa que começa com: "{message}". Responda APENAS o título, sem explicações, sem pontuação.'
+        title = call_llm(prompt)
+
+        new_title(db, id, title)
+
     # gemini_history = [{'role': m['role'], 'parts': m['content']} for m in history]    // nao aceita esse 'tipo de entrada
     # gemini_history.append({'role': 'user', 'parts': [message]})
 
@@ -46,14 +52,24 @@ def receive_message(id):
     add_message(db, id, 'user', message)
     add_message(db, id, 'model', response)
 
-    return jsonify({'response': response})
+    return jsonify({
+        'response': response,
+        'is_first_message': len(history) == 0   #para mudar o nome da conversa quando for a primeira msg
+        
+    })
     
 
 
 @chat_bp.route('/chat/<id>/history', methods=['GET'])
 def return_history(id):
-    pass
+    db = current_app.db
 
+    conversations = search_talk(db, id)
+    if not conversations:
+        return jsonify({'message': "Conversa não encontrada"}), 404
+    
+    conversations['_id'] = str(conversations['_id'])
+    return jsonify(conversations)
 
 @chat_bp.route('/chats', methods=['GET'])
 def chats():
@@ -61,7 +77,7 @@ def chats():
 
     # Primeiro {}, filtro vazio, ou seja, traz todos os documentos
     # Segundo {'title': 1}, projeção, diz quais campos retornar. Aqui traz só o title e o _id
-    conversations = list(db.conversations.find({}, {'title': 1}))
+    conversations = list(db.conversas.find({}, {'title': 1}))   #conversas é o nome que esta no banco
     for c in conversations:
         c['_id'] = str(c['_id'])
     #transforma tudo em str o ObjectId
