@@ -2,7 +2,7 @@ function addMessage(role, text) {
     const messages = document.getElementById('messages')
     const div = document.createElement('div')
     div.classList.add('message', role)
-    div.textContent = text
+    div.innerHTML = marked.parse(text)
     messages.appendChild(div)
     messages.scrollTop = messages.scrollHeight
 }

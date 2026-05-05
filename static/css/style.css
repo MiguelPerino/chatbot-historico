@@ -46,6 +46,9 @@ body {
     flex: 1;
     padding: 1rem;
     overflow-y: auto;   
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .input-area {
@@ -100,11 +103,11 @@ body {
 .message.user {
     background-color: #4a90e2;
     color: #fff;
-    margin-left: auto;
+    align-self: flex-end;
 }
 
 .message.bot {
     background-color: #2a2a2a;
     color: #fff;
-    margin-right: auto;
+    align-self: flex-start;
 }
