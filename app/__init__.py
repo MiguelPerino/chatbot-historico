@@ -1,10 +1,10 @@
+from flask_login import LoginManager
 from dotenv import load_dotenv
 load_dotenv()  
  
 from flask import Flask
 from pymongo import MongoClient
 import os
-from app.routes.chat import chat_bp
 #serve para ler o arquivo .env e carrregar as variáveis
 #de ambiente definidas nele
 
@@ -16,8 +16,19 @@ def create_app():
 
     client = MongoClient(app.config['MONGO_URI'])
     app.db = client.get_database('chatbot')
-    app.register_blueprint(chat_bp)
+    login_manager = LoginManager()
+    login_manager.login_view = 'auth.login'
+    login_manager.init_app(app)
 
+    @login_manager.user_loader
+    def load_user(user_id):
+        from bson import ObjectId
+        from app.models.user import User
+        user = app.db.users.find_one({"_id": ObjectId(user_id)})
+        if user:
+            return User(user['_id'], user['username'], user['password'])
+        return None
+    
     try:
         client.admin.command('ping')
         print('✅ MongoDB conectado com sucesso!')
@@ -25,4 +36,10 @@ def create_app():
     except Exception as e:
         print(f'❌ Erro ao conectar no MongoDB: {e}')
 
+    from app.routes.chat import chat_bp
+    app.register_blueprint(chat_bp)
+
+    from app.routes.auth import auth_bp
+    app.register_blueprint(auth_bp)
+    
     return app

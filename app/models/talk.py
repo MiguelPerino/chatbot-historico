@@ -1,11 +1,12 @@
 from bson import ObjectId
 from datetime import datetime, timezone
 
-def create_talk(db, title="Nova conversa"):
+def create_talk(db, user_id, title="Nova conversa"):
     result = db.conversas.insert_one({
         'title': title,
         'created_on': datetime.now(timezone.utc),
-        'message': []
+        'message': [],
+        'user_id': user_id
     })
     return str(result.inserted_id)
 

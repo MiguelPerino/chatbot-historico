@@ -1,4 +1,5 @@
 from flask import render_template, request, jsonify, Blueprint, current_app
+from flask_login import current_user, login_required
 from app.models.talk import create_talk, search_talk, add_message, new_title
 from app.services.llm import call_llm
 
@@ -10,13 +11,14 @@ def home():
 
 
 @chat_bp.route('/chat/create', methods=['POST'])
+@login_required
 def create_chat():
     db = current_app.db
-    return jsonify({'id': create_talk(db)})
+    return jsonify({'id': create_talk(db, current_user.id)})
 #colocar um render_template para conversa aq
     
-
 @chat_bp.route('/chat/<id>/message', methods=['POST'])
+@login_required
 def receive_message(id):
     #pegar a mensagem, buscar no banco, montar a lista de mensagempro gemini, chamar ele
     # salvar no banco a resposta e retornar em JSON
@@ -65,7 +67,7 @@ def receive_message(id):
 
     prompt += f"Usuário: {message}\nAssistente:"
 
-
+    
     # response = call_llm(gemini_history)
     response = call_llm(prompt)
     # response = 'teste'
@@ -82,6 +84,7 @@ def receive_message(id):
 
 
 @chat_bp.route('/chat/<id>/history', methods=['GET'])
+@login_required
 def return_history(id):
     db = current_app.db
 
@@ -93,12 +96,13 @@ def return_history(id):
     return jsonify(conversations)
 
 @chat_bp.route('/chats', methods=['GET'])
+@login_required
 def chats():
     db = current_app.db 
 
     # Primeiro {}, filtro vazio, ou seja, traz todos os documentos
     # Segundo {'title': 1}, projeção, diz quais campos retornar. Aqui traz só o title e o _id
-    conversations = list(db.conversas.find({}, {'title': 1}))   #conversas é o nome que esta no banco
+    conversations = list(db.conversas.find({'user_id': current_user.id}, {'title': 1}))   #conversas é o nome que esta no banco
     for c in conversations:
         c['_id'] = str(c['_id'])
     #transforma tudo em str o ObjectId

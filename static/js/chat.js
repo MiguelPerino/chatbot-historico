@@ -58,6 +58,12 @@ document.getElementById('btn-send').addEventListener('click', async () => {
 
 async function loadChats() {
     const response = await fetch('/chats')
+
+    if (response.redirected || !response.ok) {
+        window.location.href = '/login'
+        return
+    }
+
     const data = await response.json()
     
     const sidebar = document.getElementById('sidebar-list')
@@ -87,6 +93,5 @@ async function loadChats() {
 
     })
 }
-
 
 loadChats()
