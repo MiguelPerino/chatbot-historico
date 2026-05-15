@@ -3,14 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login — Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 </head>
 <body>
-    <input type="text" id="username">
-    <input type="password" id="password">
+    <div class="card">
+        <div class="logo">
+            <div class="logo-dot"></div>
+            <span class="logo-text">Chatbot</span>
+        </div>
 
-    <button id="btn-login">Login</button>
-    <button id="btn-register">Register</button>
+        <h1>Bem-vindo</h1>
+        <p class="subtitle">Entre na sua conta ou crie uma nova</p>
+
+        <div class="tabs">
+            <button class="tab active" id="tab-login" onclick="switchTab('login')">Login</button>
+            <button class="tab" id="tab-register" onclick="switchTab('register')">Registro</button>
+        </div>
+
+        <div class="field">
+            <label>Usuário</label>
+            <input type="text" id="username" placeholder="seu_usuario" autocomplete="username">
+        </div>
+        <div class="field">
+            <label>Senha</label>
+            <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+        </div>
+
+        <button class="btn" id="btn-submit">Entrar</button>
+        <div class="message" id="msg"></div>
+    </div>
 
     <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
 </body>

@@ -1,37 +1,55 @@
-document.getElementById('btn-login').addEventListener('click', async () => {
-    const username = document.getElementById('username').value
-    const password = document.getElementById('password').value
+let mode = 'login'
 
-    const response = await fetch ('/login', {
+function switchTab(tab) {
+    mode = tab
+    document.getElementById('tab-login').classList.toggle('active', tab === 'login')
+    document.getElementById('tab-register').classList.toggle('active', tab === 'register')
+    document.getElementById('btn-submit').textContent = tab === 'login' ? 'Entrar' : 'Criar conta'
+    document.getElementById('msg').className = 'message'
+}
+
+function showMsg(text, type) {
+    const el = document.getElementById('msg')
+    el.textContent = text
+    el.className = `message ${type}`
+}
+
+document.getElementById('btn-submit').addEventListener('click', async () => {
+    const username = document.getElementById('username').value.trim()
+    const password = document.getElementById('password').value
+    const btn = document.getElementById('btn-submit')
+
+    if (!username || !password) {
+        showMsg('Preencha todos os campos.', 'error')
+        return
+    }
+
+    btn.disabled = true
+    btn.textContent = mode === 'login' ? 'Entrando...' : 'Criando conta...'
+
+    const url = mode === 'login' ? '/login' : '/register'
+    const response = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json'},
-        body: JSON.stringify({'username': username, 'password': password})
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
     })
 
     const data = await response.json()
+    btn.disabled = false
+    btn.textContent = mode === 'login' ? 'Entrar' : 'Criar conta'
 
     if (response.ok) {
-        window.location.href = '/'
+        if (mode === 'login') {
+            window.location.href = '/'
+        } else {
+            showMsg('Conta criada! Faça login para continuar.', 'success')
+            switchTab('login')
+        }
     } else {
-        alert(data.message)
+        showMsg(data.message || 'Erro ao processar.', 'error')
     }
 })
 
-document.getElementById('btn-register').addEventListener('click', async () => {
-    const username = document.getElementById('username').value
-    const password = document.getElementById('password').value
-
-    const response = await fetch ('/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json'},
-        body: JSON.stringify({'username': username, 'password': password})
-    })
-
-    const data = await response.json()
-
-    if (response.ok) {
-        window.location.href = '/'
-    } else {
-        alert(data.message)
-    }
+document.getElementById('password').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('btn-submit').click()
 })

@@ -6,6 +6,7 @@ from app.services.llm import call_llm
 chat_bp = Blueprint('chat', __name__)
 
 @chat_bp.route('/')
+@login_required
 def home():
     return render_template('index.html')
 
