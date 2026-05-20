@@ -25,3 +25,6 @@ def new_title(db, talk_id, title):
         {'_id': ObjectId(talk_id)},
         {'$set': {'title': title}}
     )
+
+def delete_talk(db, talk_id):
+    db.conversas.delete_one({"_id": ObjectId(talk_id)})

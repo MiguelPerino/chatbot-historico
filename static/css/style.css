@@ -19,6 +19,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    justify-content: space-between;
 }
 
 .sidebar button {
@@ -33,6 +34,19 @@ body {
 
 .sidebar button:hover {
     background-color: #444;
+}
+
+.sidebar-top {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.sidebar-bottom {
+    padding-top: 10px;
+    border-top: 1px solid #333;
 }
 
 
@@ -83,12 +97,28 @@ body {
     cursor: pointer;
     color: #fff;
     font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
+
 
 .chat-item:hover {
     background-color: #3a3a3a;
 }
 
+.btn-delete {
+    cursor: pointer;
+    font-size: 7px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    width: auto !important;
+    min-width: unset;
+}
+
+.btn-delete:hover {
+    color: #e07070;
+}
 
 .message {
     max-width: 70%;
@@ -111,3 +141,4 @@ body {
     color: #fff;
     align-self: flex-start;
 }
+

@@ -6,9 +6,14 @@
     <title>Chatbot</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"></head> 
 <body>
-    <div class="sidebar"> 
-        <button id="btn-new-chat"> Nova conversa </button>
-        <div id="sidebar-list"></div>
+    <div class="sidebar">
+        <div class="sidebar-top">
+            <button id="btn-new-chat">Nova conversa</button>
+            <div id="sidebar-list"></div>
+        </div>
+        <div class="sidebar-bottom">
+            <button id="btn-logout">Sair</button>
+        </div>
     </div>
     <div class="chat-container">
         <div class="messages" id="messages"> </div>

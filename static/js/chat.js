@@ -2,11 +2,24 @@ function addMessage(role, text) {
     const messages = document.getElementById('messages')
     const div = document.createElement('div')
     div.classList.add('message', role)
-    div.innerHTML = marked.parse(text)
+
+    if (role === 'bot') {
+        const name = document.createElement('span')
+        name.textContent = 'MiguelBot'
+        name.style.display = 'block'
+        name.style.fontSize = '11px'
+        name.style.color = '#888'
+        name.style.marginBottom = '4px'
+        div.appendChild(name)
+    }
+
+    const content = document.createElement('div')
+    content.innerHTML = marked.parse(text)
+    div.appendChild(content)
+
     messages.appendChild(div)
     messages.scrollTop = messages.scrollHeight
 }
-
 
 let currentChatId = null
 
@@ -54,7 +67,17 @@ document.getElementById('btn-send').addEventListener('click', async () => {
 
     })
 
+document.getElementById('input-message').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        document.getElementById('btn-send').click()
+    }
+})
 
+
+document.getElementById('btn-logout').addEventListener('click', async () => {
+    await fetch('/logout', { method: 'POST' })
+    window.location.href = '/login'
+})
 
 async function loadChats() {
     const response = await fetch('/chats')
@@ -71,8 +94,14 @@ async function loadChats() {
     
     data.forEach(conversa => {
         const div = document.createElement('div')
-        div.textContent = conversa.title
         div.classList.add('chat-item')
+
+        const title = document.createElement('span')
+        title.textContent = conversa.title
+        title.style.overflow = 'hidden'
+        title.style.textOverflow = 'ellipsis'
+        title.style.whiteSpace = 'nowrap'
+        div.appendChild(title)
 
         div.onclick = async () => {
             currentChatId = conversa._id
@@ -88,6 +117,15 @@ async function loadChats() {
                 addMessage(role, msg.content)
             })
         }
+        const btn = document.createElement('button')
+        btn.textContent = '✕'
+        btn.classList.add('btn-delete')
+        btn.onclick = async (e) => {
+            e.stopPropagation()  // impede de abrir a conversa ao deletar
+            await fetch(`/delete/${conversa._id}`, { method: 'DELETE' })
+            loadChats()
+        }
+        div.appendChild(btn)        
 
         sidebar.appendChild(div)
 

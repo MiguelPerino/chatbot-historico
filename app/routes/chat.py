@@ -1,6 +1,6 @@
 from flask import render_template, request, jsonify, Blueprint, current_app
 from flask_login import current_user, login_required
-from app.models.talk import create_talk, search_talk, add_message, new_title
+from app.models.talk import create_talk, search_talk, add_message, new_title, delete_talk
 from app.services.llm import call_llm
 
 chat_bp = Blueprint('chat', __name__)
@@ -101,7 +101,7 @@ def return_history(id):
 def chats():
     db = current_app.db 
 
-    # Primeiro {}, filtro vazio, ou seja, traz todos os documentos
+    # Primeiro {}, filtro com user_id, ou seja, traz todos os documentos daquele usuário, que está logado no momento com current_user
     # Segundo {'title': 1}, projeção, diz quais campos retornar. Aqui traz só o title e o _id
     conversations = list(db.conversas.find({'user_id': current_user.id}, {'title': 1}))   #conversas é o nome que esta no banco
     for c in conversations:
@@ -109,3 +109,11 @@ def chats():
     #transforma tudo em str o ObjectId
 
     return jsonify(conversations)
+
+
+@chat_bp.route('/delete/<id>', methods=['DELETE'])
+@login_required
+def delete_chat(id):
+    db = current_app.db 
+    delete_talk(db, id)
+    return jsonify({'message': 'Conversa deletada.'})
