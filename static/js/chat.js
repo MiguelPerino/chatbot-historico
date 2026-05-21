@@ -131,6 +131,12 @@ async function loadChats() {
         btn.onclick = async (e) => {
             e.stopPropagation()  // impede de abrir a conversa ao deletar
             await fetch(`/delete/${conversa._id}`, { method: 'DELETE' })
+
+            if(currentChatId === conversa._id) {
+                currentChatId = null
+                document.getElementById('messages').innerHTML = ''
+            }
+
             loadChats()
         }
         div.appendChild(btn)        
