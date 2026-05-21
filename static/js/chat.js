@@ -69,7 +69,10 @@ document.getElementById('btn-send').addEventListener('click', async () => {
 
 document.getElementById('input-message').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
-        document.getElementById('btn-send').click()
+        const btn = document.getElementById('btn-send')
+        btn.classList.add('clicking')
+        setTimeout(() => btn.classList.remove('clicking'), (150));
+        btn.click()
     }
 })
 
