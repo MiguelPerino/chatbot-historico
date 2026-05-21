@@ -32,8 +32,7 @@ document.getElementById('btn-new-chat').addEventListener('click', async () => {
     loadChats()
     console.log('conversa criada:', currentChatId)
 })
-
-
+  
 // Pegar o texto do input-message
 // Verificar se currentChatId não é null
 // Chamar POST /chat/<id>/message com o texto
@@ -72,6 +71,9 @@ document.getElementById('btn-send').addEventListener('click', async () => {
 document.getElementById('input-message').addEventListener('keydown', (e) => {
 
     if (e.key === 'Enter') {
+        const message = document.getElementById('input-message').value
+        if (!message.trim()) return
+
         const btn = document.getElementById('btn-send')
         btn.classList.add('clicking')
         setTimeout(() => btn.classList.remove('clicking'), (150));
