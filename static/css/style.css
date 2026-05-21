@@ -147,3 +147,45 @@ body {
     opacity: 0.7;
     transition: all 0.1s;
 }
+
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 0.5rem;
+    }
+
+    .sidebar-top {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .sidebar-bottom {
+        border-top: none;
+        border-left: 1px solid #333;
+        padding-top: 0;
+        padding-left: 10px;
+    }
+
+    .chat-container {
+        flex: 1;
+        height: 0;
+    }
+
+    .message {
+        max-width: 90%;
+    }
+}
