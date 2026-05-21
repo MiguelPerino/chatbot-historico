@@ -42,6 +42,8 @@ document.getElementById('btn-new-chat').addEventListener('click', async () => {
 document.getElementById('btn-send').addEventListener('click', async () => {
     const message = document.getElementById('input-message').value
 
+    if (!message.trim()) return
+
     if (!currentChatId) {
         alert('Cria uma conversa primeiro')
         return
@@ -68,6 +70,7 @@ document.getElementById('btn-send').addEventListener('click', async () => {
     })
 
 document.getElementById('input-message').addEventListener('keydown', (e) => {
+
     if (e.key === 'Enter') {
         const btn = document.getElementById('btn-send')
         btn.classList.add('clicking')
