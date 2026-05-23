@@ -14,13 +14,16 @@ Aplicação web de chatbot com inteligência artificial, histórico de conversas
 
 ## Funcionalidades
 
-- Registro e login de usuários com senha criptografada
+- Registro e login de usuários com senha criptografada com bcrypt
 - Criação de múltiplas conversas por usuário
+- Exclusão de conversas
 - Histórico de mensagens persistido no MongoDB
-- Geração automática de título da conversa baseado na primeira mensagem
+- Geração automática de título da conversa baseado na primeira mensagem via LLM
+- Renderização de Markdown nas respostas do bot
 - Cada usuário acessa apenas suas próprias conversas
-- Rotas protegidas com autenticação obrigatória
-- Interface com sidebar listando conversas anteriores
+- Rotas protegidas com autenticação obrigatória (`@login_required`)
+- Interface responsiva com sidebar listando conversas anteriores
+- Envio de mensagem com Enter ou clique no botão
 
 ## Estrutura do Projeto
 
@@ -29,7 +32,7 @@ chatbot/
 ├── app/
 │   ├── __init__.py          # factory do app Flask, configuração do LoginManager
 │   ├── models/
-│   │   ├── talk.py          # operações no MongoDB para conversas
+│   │   ├── talk.py          # operações no MongoDB para conversas (CRUD)
 │   │   └── user.py          # classe User compatível com Flask-Login
 │   ├── routes/
 │   │   ├── chat.py          # rotas do chat (protegidas com @login_required)
@@ -37,7 +40,9 @@ chatbot/
 │   └── services/
 │       └── llm.py           # integração com a API do Gemini
 ├── static/
-│   ├── css/style.css
+│   ├── css/
+│   │   ├── style.css        # estilos da interface do chat
+│   │   └── login.css        # estilos da página de login
 │   └── js/
 │       ├── chat.js          # lógica do chat no front-end
 │       └── auth.js          # lógica de login e registro
@@ -54,15 +59,16 @@ chatbot/
 
 | Método | Rota | Descrição | Auth |
 |--------|------|-----------|------|
-| GET | `/` | Interface principal | Não |
+| GET | `/` | Interface principal do chat | Sim |
 | GET | `/login` | Página de login | Não |
 | POST | `/login` | Autenticar usuário | Não |
-| POST | `/register` | Registrar usuário | Não |
+| POST | `/register` | Registrar novo usuário | Não |
 | POST | `/logout` | Encerrar sessão | Sim |
 | POST | `/chat/create` | Criar nova conversa | Sim |
 | POST | `/chat/<id>/message` | Enviar mensagem e receber resposta da IA | Sim |
 | GET | `/chat/<id>/history` | Buscar histórico de uma conversa | Sim |
 | GET | `/chats` | Listar todas as conversas do usuário | Sim |
+| DELETE | `/delete/<id>` | Deletar uma conversa | Sim |
 
 ## Como rodar localmente
 
