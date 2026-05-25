@@ -39,7 +39,8 @@ def receive_message(id):
     # gemini_history = [{'role': m['role'], 'parts': m['content']} for m in history]    // nao aceita esse 'tipo de entrada
     # gemini_history.append({'role': 'user', 'parts': [message]})
 
-    #ele aceita assim, como uma string normal
+
+    #MUDE AQUI O PROMPT DE COMO DESEJA QUE ELE TE RESPONDA 
     prompt ='''
         Você é um assistente profissional altamente qualificado, especializado em fornecer respostas claras, precisas e bem estruturadas.
 
